@@ -1,0 +1,30 @@
+//https://leetcode.com/problems/jump-game/description/
+
+class Solution {
+public:
+    bool f(int ind , vector<int> &nums , int n , vector<int> &dp)
+    {
+        if(ind == n-1)
+        return dp[ind] = true ;
+
+        if(dp[ind] != -1)
+        return dp[ind] ;
+
+        if(ind >= n)
+        return dp[ind] = false ;
+
+        for(int i = 1 ; i <= nums[ind] ; ++i)
+        {
+            if(f(ind+i , nums , n , dp) == true)
+            return dp[ind] = true ;
+        }
+        return dp[ind] = false ;
+    }
+    bool canJump(vector<int>& nums) {
+        int n = nums.size() ;
+
+        vector<int> dp(n , -1) ;
+
+        return f(0 , nums , n , dp) ;
+    }
+};
