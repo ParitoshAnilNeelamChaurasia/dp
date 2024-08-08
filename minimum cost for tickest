@@ -1,0 +1,50 @@
+// https://leetcode.com/problems/minimum-cost-for-tickets/submissions/1348857244/
+
+class Solution
+{
+public:
+    int m;
+
+    int f(int ind, vector<int> &days, vector<int> &costs, vector<int> &dp)
+    {
+        if (ind >= m)
+        {
+            return 0;
+        }
+
+        if (dp[ind] != -1)
+        {
+            return dp[ind];
+        }
+
+        // One day pass
+        int one_day = costs[0] + f(ind + 1, days, costs, dp);
+
+        // Seven day pass
+        int j = ind;
+        int max_day = days[ind] + 7;
+        while (j < m && days[j] < max_day)
+        {
+            j++;
+        }
+        int cost_seven = costs[1] + f(j, days, costs, dp);
+
+        // Thirty day pass
+        j = ind;
+        max_day = days[ind] + 30;
+        while (j < m && days[j] < max_day)
+        {
+            j++;
+        }
+        int cost_30 = costs[2] + f(j, days, costs, dp);
+
+        return dp[ind] = min({one_day, cost_seven, cost_30});
+    }
+
+    int mincostTickets(vector<int> &days, vector<int> &costs)
+    {
+        m = days.size();
+        vector<int> dp(m, -1);
+        return f(0, days, costs, dp);
+    }
+};
