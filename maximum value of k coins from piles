@@ -1,0 +1,38 @@
+// https://leetcode.com/problems/maximum-value-of-k-coins-from-piles/description/
+
+class Solution
+{
+public:
+    int n;
+
+    int f(int ind, vector<vector<int>> &piles, int k, vector<vector<int>> &dp)
+    {
+        if (ind >= n)
+        {
+            return 0;
+        }
+        if (dp[ind][k] != -1)
+            return dp[ind][k];
+
+        int not_take = f(ind + 1, piles, k, dp);
+
+        int take = 0;
+        int sum = 0;
+
+        for (int i = 0; i < min((int)piles[ind].size(), k); ++i)
+        {
+            sum += piles[ind][i];
+
+            take = max(take, sum + f(ind + 1, piles, k - (i + 1), dp)); // after take -> k-(i+1) coins left
+        }
+        return dp[ind][k] = max(take, not_take);
+    }
+    int maxValueOfCoins(vector<vector<int>> &piles, int k)
+    {
+        n = piles.size();
+
+        vector<vector<int>> dp(n, vector<int>(k + 1, -1));
+
+        return f(0, piles, k, dp);
+    }
+};
