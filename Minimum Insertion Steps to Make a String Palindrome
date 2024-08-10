@@ -1,0 +1,30 @@
+// https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/
+
+class Solution {
+public:
+    int n ;
+
+    int f(int st , int en , string &s , vector<vector<int>> &dp)
+    {
+        if(st >= en)
+        {
+            return 0 ;
+        }
+
+        if(dp[st][en] != -1)
+        return dp[st][en] ;
+
+        if(s[st] == s[en])
+        return dp[st][en] = f(st+1 , en-1, s , dp) ;
+
+        return dp[st][en] = 1 + min( f(st+1 , en , s , dp) , f(st , en-1 , s , dp) ) ;
+
+    }
+    int minInsertions(string s) {
+        n = s.size() ;
+
+        vector<vector<int>>dp(n , vector<int>(n,-1)) ;
+
+        return f(0 , n-1 , s , dp) ;
+    }
+};
