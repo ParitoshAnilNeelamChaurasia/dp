@@ -1,0 +1,27 @@
+// https://leetcode.com/problems/find-the-longest-valid-obstacle-course-at-each-position/description/
+
+class Solution
+{
+public:
+    vector<int> longestObstacleCourseAtEachPosition(vector<int> &obstacles)
+    {
+        int n = obstacles.size();
+        vector<int> result(n), sortedList;
+
+        for (int i = 0; i < n; i++)
+        {
+            int idx = upper_bound(sortedList.begin(), sortedList.end(), obstacles[i]) - sortedList.begin();
+            result[i] = idx + 1;
+            if (idx == sortedList.size())
+            {
+                sortedList.push_back(obstacles[i]);
+            }
+            else
+            {
+                sortedList[idx] = obstacles[i];
+            }
+        }
+
+        return result;
+    }
+};
