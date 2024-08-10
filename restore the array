@@ -1,0 +1,41 @@
+// https://leetcode.com/problems/restore-the-array/
+
+class Solution {
+public:
+    const int MOD = 1e9 + 7;
+
+    int f(int ind, string &s, int k, int n, vector<int> &dp) {
+        if (ind >= n) {
+            return 1;  // Reached the end of the string, count this as a valid way
+        }
+
+        if (dp[ind] != -1) {
+            return dp[ind];  // Return already computed result
+        }
+
+        if (s[ind] == '0') {
+            return 0;  // No valid number can start with '0'
+        }
+
+        long long ans = 0;
+        long long num = 0;
+
+        for (int end = ind; end < n; ++end) {
+            num = num * 10 + (s[end] - '0');  // Form the number
+
+            if (num > k) {
+                break;  // If the number exceeds k, no need to check further
+            }
+
+            ans = (ans + f(end + 1, s, k, n, dp)) % MOD;  // Recur for the next part
+        }
+
+        return dp[ind] = ans;  
+    }
+
+    int numberOfArrays(string s, int k) {
+        int n = s.size();
+        vector<int> dp(n, -1);  
+        return f(0, s, k, n, dp);  
+    }
+};
