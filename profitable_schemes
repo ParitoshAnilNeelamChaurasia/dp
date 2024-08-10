@@ -1,0 +1,49 @@
+// https://leetcode.com/problems/profitable-schemes/description/
+
+class Solution {
+public:
+    int  m , pro ;
+    int dp[101][101][101] ;
+
+    const int MOD = 1e9+7 ;
+
+    int f(int ind , int pr, int people , int minProfit , vector<int>& group, vector<int>& profit , int n)
+    {
+        if(people > n)
+        {
+            return 0 ;
+        }
+
+        if(dp[ind][pr][people] != -1)
+        {
+            return dp[ind][pr][people] ;
+        }
+
+        if(ind == m)
+        {
+            if(pr >= minProfit)
+            {
+                return dp[ind][pr][people] = 1 ;
+            }
+            else
+            {
+            return dp[ind][pr][people]= 0 ;
+            }
+        }
+
+        long long not_take = f(ind+1 , pr , people , minProfit , group , profit , n) % MOD;
+
+        long long take = f(ind+1 ,min(pr + profit[ind] , minProfit) , people + group[ind] , minProfit , group , profit , n) % MOD;
+
+        return dp[ind][pr][people] = (take % MOD+ not_take % MOD) % MOD  ;
+
+    }
+    int profitableSchemes(int n, int minProfit, vector<int>& group, vector<int>& profit) {
+        m = group.size() ;
+        pro = profit.size() ;
+
+        memset(dp , -1 , sizeof(dp)) ;
+
+        return f(0 , 0 , 0 , minProfit , group , profit , n ) ;
+    }
+};
