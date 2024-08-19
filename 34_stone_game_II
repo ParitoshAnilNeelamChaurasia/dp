@@ -1,0 +1,50 @@
+// https://leetcode.com/problems/stone-game-ii/description/
+
+class Solution {
+public:
+    int n ;
+
+    int dp[2][101][101] ;
+
+    int f(vector<int> &piles , int person , int ind , int M)
+    {
+        if(ind >= n)
+        {
+            return 0 ;
+        }
+
+        if(dp[person][ind][M] != -1)
+        return dp[person][ind][M];
+
+        int res ;
+
+        if(person == 1)  // if alice
+        res = -1 ;
+        else
+        res = INT_MAX ;
+
+        int stones = 0 ;
+
+        for(int i = 1 ; i <= min(2*M , n-ind) ; ++i)
+        {
+            stones += piles[ind + i - 1] ;
+            if(person == 1)
+            {
+                // after alice peforms task -> bob has to perform it -> therefore person == 0
+                res = max(res , stones + f(piles , 0 , ind + i , max(M,i))) ;
+            }
+            else
+            {
+                res = min(res , f(piles , 1 , ind+i , max(M,i))) ;
+            }
+        }
+        return dp[person][ind][M] = res ;
+    }
+    int stoneGameII(vector<int>& piles) {
+        n = piles.size() ;
+
+        memset(dp, -1, sizeof(dp)) ;
+
+        return f(piles , 1 , 0 , 1) ;
+    }
+};
