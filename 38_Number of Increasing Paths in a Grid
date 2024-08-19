@@ -1,0 +1,58 @@
+// https://leetcode.com/problems/number-of-increasing-paths-in-a-grid/description/
+
+class Solution {
+public:
+    int m , n ;
+
+    const int   mod = 1e9+7 ;
+
+    // int dp[100001][100001] ;
+
+    vector<vector<int>> directions = {
+        {-1,0} , {1,0} , {0,-1} , {0,1} 
+    };
+
+    bool is_safe(int i,int j)
+    {
+        return (i >= 0 && i < m && j >= 0 && j < n) ;
+    }
+
+    int dfs(vector<vector<int>>& grid , int i , int j , vector<vector<int>> &dp) 
+    {
+        if(dp[i][j] != -1)
+        return dp[i][j] ;
+        // Each cell itself is a valid path, so res starts at 1
+        int res = 1 ;
+
+
+        for(auto &dir : directions)
+        {
+            int new_i = i + dir[0] ;
+            int new_j = j + dir[1] ;
+
+            if(is_safe(new_i , new_j) && grid[new_i][new_j] < grid[i][j])
+            {
+                res = (res + dfs(grid , new_i , new_j , dp)) % mod ;
+            }
+        }
+        return dp[i][j] = res % mod ;
+    }
+
+    int countPaths(vector<vector<int>>& grid) {
+        m = grid.size() ;
+        n = grid[0].size() ;
+
+        vector<vector<int>>dp(m , vector<int>(n,-1));
+
+        int ans = 0 ;
+
+        for(int i = 0 ; i < m ; ++i)
+        {
+            for(int j = 0 ; j < n ; ++j)
+            {
+                ans = (ans + dfs(grid , i , j , dp)) % mod;
+            }
+        }
+        return ans % mod ;
+    }
+};
