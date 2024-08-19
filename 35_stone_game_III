@@ -1,0 +1,47 @@
+// https://leetcode.com/problems/stone-game-iii/
+
+class Solution
+{
+public:
+    int n;
+    int dp[50001];
+    int f(int ind, vector<int> &stoneValue)
+    {
+        if (ind >= n)
+        {
+            return 0;
+        }
+
+        if (dp[ind] != -1)
+            return dp[ind];
+
+        int res = INT_MIN;
+
+        if (ind < n)
+            res = max(res, stoneValue[ind] - f(ind + 1, stoneValue));
+
+        if (ind < n - 1)
+            res = max(res, stoneValue[ind] + stoneValue[ind + 1] - f(ind + 2, stoneValue));
+
+        if (ind < n - 2)
+            res = max(res, stoneValue[ind] + stoneValue[ind + 1] + stoneValue[ind + 2] - f(ind + 3, stoneValue));
+
+        return dp[ind] = res;
+    }
+    string stoneGameIII(vector<int> &stoneValue)
+    {
+        n = stoneValue.size();
+
+        memset(dp, -1, sizeof(dp));
+
+        int res = f(0, stoneValue);
+
+        if (res > 0)
+            return "Alice";
+
+        else if (res < 0)
+            return "Bob";
+
+        return "Tie";
+    }
+};
