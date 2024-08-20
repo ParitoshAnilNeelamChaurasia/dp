@@ -1,0 +1,44 @@
+// https://leetcode.com/problems/count-all-possible-routes/description/
+
+class Solution {
+public:
+    int n ;
+
+    int dp[101][201] ;
+
+    const int mod = 1e9+7 ;
+
+    int f(int ind , vector<int>& locations, int start, int finish, int fuel)
+    {
+        if(fuel < 0)
+        {
+            return 0 ;
+        }
+        if(dp[ind][fuel] != -1)
+        return dp[ind][fuel] ;
+
+        int ans = 0 ;
+        if(ind == finish)
+        {
+            ans++ ;
+        }
+
+        for(int j = 0 ; j < n ; ++j)
+        {
+            if(ind != j)
+            {
+                int remain_fuel = fuel - abs(locations[ind] - locations[j]) ;
+
+                ans = (ans + f(j , locations , start , finish , remain_fuel)) % mod ;
+            }
+        }
+        return dp[ind][fuel] = ans % mod ;
+    }
+    int countRoutes(vector<int>& locations, int start, int finish, int fuel) {
+        n = locations.size() ;
+
+        memset(dp , -1 , sizeof(dp)) ;
+
+        return f(start , locations , start , finish , fuel) ;
+    }
+};
