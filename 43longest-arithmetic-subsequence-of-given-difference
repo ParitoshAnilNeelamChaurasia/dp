@@ -1,0 +1,68 @@
+// https://leetcode.com/problems/longest-arithmetic-subsequence-of-given-difference/
+
+class Solution {
+public:
+    int n ;
+    int dp[100001] ;
+    int f(int ind , vector<int>& arr, int difference)
+    {
+        int res = 0 ;
+
+        if(dp[ind] != -1)
+        return dp[ind] ;
+
+        for(int j = ind+1 ; j < n ; ++j)
+        {
+            int prev = arr[ind] ;
+            int curr = arr[j] ;
+
+            if(curr - prev == difference)
+            {
+                res = max(res , 1 + f(j , arr , difference)) ;
+            }
+        }
+        return dp[ind] = res ;
+    }
+
+    int longestSubsequence(vector<int>& arr, int difference) {
+        n = arr.size() ;
+
+        int count = 0 ;
+
+        memset(dp , -1 , sizeof(dp)) ;
+
+        for(int i = 0 ; i < n ; ++i)
+        {
+            count = max(count , 1 + f(i , arr , difference)) ;
+        }
+        return count ;
+    }
+};
+
+
+//   OPTIMAL APPROACH
+
+
+class Solution {
+public:
+    int longestSubsequence(vector<int>& arr, int difference) {
+        int n = arr.size() ;
+
+        unordered_map<int,int> mp ;
+
+        int res = 0 ;
+
+        for(int i = 0 ; i < n ; ++i)
+        {
+            // what we expect to see on prev value
+            int prev = arr[i] - difference ;
+
+            int len_till_now = mp[prev] ;
+            
+            mp[arr[i]] = len_till_now + 1 ;
+
+            res = max(res , mp[arr[i]]) ;
+        }
+        return res ;
+    }
+};
