@@ -1,0 +1,39 @@
+// https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended-ii/
+
+class Solution {
+public:
+    int n;
+    vector<vector<int>> dp;
+
+    int f(int ind, vector<vector<int>>& events, int k) {
+        if (ind >= n || k == 0) {
+            return 0;
+        }
+
+        if (dp[ind][k] != -1) {
+            return dp[ind][k];
+        }
+
+        int not_take = f(ind + 1, events, k);
+
+        int nextEvent = ind + 1;
+        while (nextEvent < n && events[nextEvent][0] <= events[ind][1]) {
+            nextEvent++;
+        }
+
+        int take = events[ind][2] + f(nextEvent, events, k - 1);
+
+        return dp[ind][k] = max(take, not_take);
+    }
+
+    int maxValue(vector<vector<int>>& events, int k) {
+        n = events.size();
+
+        // Sorting events based on their start time
+        sort(events.begin(), events.end());
+
+        dp = vector<vector<int>>(n, vector<int>(k + 1, -1));
+
+        return f(0, events, k);
+    }
+};
