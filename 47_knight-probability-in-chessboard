@@ -1,0 +1,32 @@
+// https://leetcode.com/problems/knight-probability-in-chessboard/description/
+
+class Solution {
+public:
+    double f(int i, int j, int k, int n, vector<vector<vector<double>>>& dp) {
+        if (i < 0 || i >= n || j < 0 || j >= n) {
+            return 0;
+        }
+        if (k == 0) {
+            return 1;
+        }
+        if (dp[i][j][k] != -1) {
+            return dp[i][j][k];
+        }
+
+        double res = f(i + 2, j + 1, k - 1, n, dp) +
+                     f(i + 1, j + 2, k - 1, n, dp) +
+                     f(i - 1, j + 2, k - 1, n, dp) +
+                     f(i - 2, j + 1, k - 1, n, dp) +
+                     f(i - 2, j - 1, k - 1, n, dp) +
+                     f(i - 1, j - 2, k - 1, n, dp) +
+                     f(i + 1, j - 2, k - 1, n, dp) +
+                     f(i + 2, j - 1, k - 1, n, dp);
+
+        return dp[i][j][k] = res / 8.0;
+    }
+
+    double knightProbability(int n, int k, int row, int column) {
+        vector<vector<vector<double>>> dp(n, vector<vector<double>>(n, vector<double>(k + 1, -1)));
+        return f(row, column, k, n, dp);
+    }
+};
