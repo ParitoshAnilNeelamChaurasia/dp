@@ -1,0 +1,43 @@
+// https://leetcode.com/problems/soup-servings/
+
+class Solution {
+public:
+    vector<pair<int,int>> serves = {{100,0} , {75,25} , {50 , 50} , {25 , 75}} ;
+
+    double f(int a , int b , vector<vector<double>> &dp)
+    {
+        if(a <= 0 && b <= 0)
+        return 0.5 ;
+
+        if(dp[a][b] != -1)
+        return dp[a][b] ;
+
+        if(a <= 0)
+        return 1.0 ;
+
+
+        if(b <= 0)
+        return 0.0 ;
+
+        double prob = 0.0 ;
+
+        for(auto &it : serves)
+        {
+            int a_take = it.first ;
+            int b_take = it.second ;
+
+            prob += f(max(0 , a - a_take) , max(0 ,b - b_take) , dp) ;
+        }
+
+        return dp[a][b] = 0.25*prob ;
+
+    }
+    double soupServings(int n) {
+
+        if(n >= 4800)
+        return 1.0 ;
+
+        vector<vector<double>>dp(n+1 , vector<double>(n+1,-1)) ;
+        return f(n,n , dp) ;
+    }
+};
