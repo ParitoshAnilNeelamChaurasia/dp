@@ -1,0 +1,61 @@
+// https://leetcode.com/problems/strange-printer/description/
+
+class Solution
+{
+public:
+    int n;
+
+    int dp[101][101];
+
+    int f(int st, int en, string s)
+    {
+        // only 1 character
+        if (st == en)
+        {
+            return 1;
+        }
+        if (dp[st][en] != -1)
+            return dp[st][en];
+
+        if (st > en)
+        {
+            return 0;
+        }
+
+        int ind = st + 1;
+
+        while (ind <= en && s[ind] == s[st])
+        {
+            ind++;
+        }
+
+        if (ind == en + 1)
+        {
+            return 1;
+        }
+
+        int basic = 1 + f(ind, en, s);
+
+        int lalach = INT_MAX;
+
+        for (int i = ind; i <= en; ++i)
+        {
+            if (s[i] == s[st])
+            {
+                int ans = f(st, i - 1, s) + f(i + 1, en, s);
+
+                lalach = min(ans, lalach);
+            }
+        }
+
+        return dp[st][en] = min(lalach, basic);
+    }
+    int strangePrinter(string s)
+    {
+        n = s.size();
+
+        memset(dp, -1, sizeof(dp));
+
+        return f(0, n - 1, s);
+    }
+};
