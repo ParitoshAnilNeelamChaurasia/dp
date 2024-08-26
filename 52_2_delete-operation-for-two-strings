@@ -1,0 +1,49 @@
+// https://leetcode.com/problems/delete-operation-for-two-strings/description/
+
+class Solution
+{
+public:
+    int m, n;
+    int dp[501][501];
+
+    int f(int i, int j, string &word1, string &word2)
+    {
+        if (dp[i][j] != -1)
+        {
+            return dp[i][j];
+        }
+        if (i >= m && j >= n)
+        {
+            return dp[i][j] = 0;
+        }
+
+        if (i >= m)
+        {
+            return dp[i][j] = 1 + f(i, j + 1, word1, word2);
+        }
+
+        if (j >= n)
+        {
+            return dp[i][j] = 1 + f(i + 1, j, word1, word2);
+        }
+
+        if (word1[i] == word2[j])
+        {
+            return dp[i][j] = f(i + 1, j + 1, word1, word2);
+        }
+
+        int first = 1 + f(i + 1, j, word1, word2);
+        int second = 1 + f(i, j + 1, word1, word2);
+
+        return dp[i][j] = min(first, second);
+    }
+    int minDistance(string word1, string word2)
+    {
+        m = word1.size();
+        n = word2.size();
+
+        memset(dp, -1, sizeof(dp));
+
+        return f(0, 0, word1, word2);
+    }
+};
