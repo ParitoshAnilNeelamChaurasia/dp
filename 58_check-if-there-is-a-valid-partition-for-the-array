@@ -1,0 +1,47 @@
+// https://leetcode.com/problems/check-if-there-is-a-valid-partition-for-the-array/description/
+
+class Solution {
+public:
+    int n ;
+
+    int dp[100001] ;
+
+    bool f(int ind , vector<int> &nums)
+    {
+        if(ind >= n)
+        {
+            return true ;
+        }
+
+        if(dp[ind] != -1)
+        {
+            return dp[ind] ;
+        }
+
+        // res = false -> after doing or with any of three valid condition becomes true -> it becomes true
+        bool res = false ;
+
+        if(ind+1 < n && nums[ind] == nums[ind+1])
+        {
+            res = res | f(ind+2 , nums) ;
+        }
+
+        if(ind+2 < n && nums[ind] == nums[ind+1] && nums[ind+1] == nums[ind+2])
+        {
+            res = res | f(ind+3 , nums) ;
+        }
+
+        if(ind + 2 < n &&  nums[ind+1] - nums[ind] == 1 &&  nums[ind+2] - nums[ind+1] == 1)
+        {
+            res = res | f(ind+3 , nums) ;
+        }
+        return dp[ind] = res ;
+    }
+    bool validPartition(vector<int>& nums) {
+        n = nums.size() ;
+
+        memset(dp , -1 , sizeof(dp)) ;
+
+        return f(0 , nums) ;
+    }
+};
