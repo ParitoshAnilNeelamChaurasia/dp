@@ -1,0 +1,44 @@
+// https://leetcode.com/problems/coin-change-ii/
+
+class Solution {
+public:
+    int n ;
+
+    int dp[301][5001] ;
+    int f(int ind , vector<int>& coins , int amount)
+    {
+        if(ind >= n || amount < 0)
+        {
+            return 0 ;
+        }
+
+        if(dp[ind][amount] != -1)
+        {
+            return dp[ind][amount]  ;
+        }
+
+        if(amount == 0)
+        {
+            return 1 ;
+        }
+
+        if(coins[ind] > amount)
+        {
+            return dp[ind][amount] = f(ind+1 , coins ,amount) ;
+        }
+
+        // can take particular coin any number of time -> therfore index doesn't incremented
+        int take = f(ind, coins , amount - coins[ind]) ;  
+
+        int not_take = f(ind+1 , coins , amount) ;
+
+        return dp[ind][amount] = take + not_take ;
+    }
+    int change(int amount, vector<int>& coins) {
+        n = coins.size() ; 
+
+        memset(dp,-1,sizeof(dp)) ;       
+
+        return f(0 , coins , amount) ;
+    }
+};
