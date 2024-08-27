@@ -1,0 +1,53 @@
+// https://leetcode.com/problems/word-break/description/
+
+class Solution
+{
+public:
+    int n;
+
+    unordered_set<string> st;
+
+    int dp[301];
+    bool f(int ind, string &s, vector<string> &wordDict)
+    {
+        if (ind >= n)
+        {
+            return dp[ind] = true;
+        }
+
+        if (dp[ind] != -1)
+        {
+            return dp[ind];
+        }
+
+        if (st.find(s) != st.end())
+        {
+            return dp[ind] = true;
+        }
+
+        string temp;
+
+        for (int l = 1; l < n; ++l)
+        {
+            temp = s.substr(ind, l);
+
+            if (st.find(temp) != st.end() && f(ind + l, s, wordDict) == true)
+            {
+                return dp[ind] = true;
+            }
+        }
+        return dp[ind] = false;
+    }
+    bool wordBreak(string s, vector<string> &wordDict)
+    {
+        n = s.size();
+
+        memset(dp, -1, sizeof(dp));
+        for (auto it : wordDict)
+        {
+            st.insert(it);
+        }
+
+        return f(0, s, wordDict);
+    }
+};
