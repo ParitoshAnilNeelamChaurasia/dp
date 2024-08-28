@@ -1,0 +1,77 @@
+// https://leetcode.com/problems/interleaving-string/description/
+
+#include<bits/stdc++.h>
+using namespace std ;
+
+class Solution
+{
+public:
+    int m, n, k;
+
+    int dp[101][101][201];
+
+    bool f(int i_1, int i_2, int i_3, string &s1, string &s2, string &s3)
+    {
+        // all three ends at the same time
+
+        if (dp[i_1][i_2][i_3] != -1)
+        {
+            return dp[i_1][i_2][i_3];
+        }
+
+        if (i_3 == k)
+        {
+            if (i_1 == m && i_2 == n && i_3 == k)
+            {
+                return dp[i_1][i_2][i_3] = true;
+            }
+
+            // s3 -> aab
+            // s1 = aab and s2 = ""
+
+            // we didn't take any character from s2
+            else
+            {
+                return dp[i_1][i_2][i_3] = false;
+            }
+        }
+
+        bool take_s1_s2 = false;
+
+        if (s1[i_1] == s3[i_3])
+        {
+            take_s1_s2 = f(i_1 + 1, i_2, i_3 + 1, s1, s2, s3);
+        }
+
+        if (take_s1_s2 == true)
+        {
+            return dp[i_1][i_2][i_3] = true;
+        }
+
+        if (s2[i_2] == s3[i_3])
+        {
+            take_s1_s2 = f(i_1, i_2 + 1, i_3 + 1, s1, s2, s3);
+        }
+        if (take_s1_s2 == true)
+        {
+            return dp[i_1][i_2][i_3] = true;
+        }
+        return dp[i_1][i_2][i_3] = false;
+    }
+
+    bool isInterleave(string s1, string s2, string s3)
+    {
+        m = s1.size();
+        n = s2.size();
+        k = s3.size();
+
+        if (m + n != k)
+        {
+            return false;
+        }
+
+        memset(dp, -1, sizeof(dp));
+
+        return f(0, 0, 0, s1, s2, s3);
+    }
+};
