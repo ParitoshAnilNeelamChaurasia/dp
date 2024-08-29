@@ -1,0 +1,37 @@
+// https://leetcode.com/problems/min-cost-climbing-stairs/description/
+
+class Solution {
+public:
+    int n ;
+
+    int dp[1001] ;
+
+    int f(int ind , vector<int> &cost)
+    {
+        if(ind >= n)
+        {
+            return 0 ;
+        }
+
+        if(dp[ind] != -1)
+        {
+            return dp[ind] ;
+        }
+
+        int first = f(ind + 1 , cost) + cost[ind];
+
+        int sec = f(ind+2 , cost) + cost[ind] ;
+
+        return dp[ind] = min(first , sec) ;
+    }
+    int minCostClimbingStairs(vector<int>& cost) {
+        n = cost.size() ;
+
+        memset(dp,-1,sizeof(dp)) ;
+        int x = f(0 , cost) ;
+
+        int y = f(1 , cost) ;
+
+        return min(x , y) ; 
+    }
+};
