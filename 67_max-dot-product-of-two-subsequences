@@ -1,0 +1,35 @@
+// https://leetcode.com/problems/max-dot-product-of-two-subsequences/
+
+class Solution {
+public:
+    int m, n;
+
+    int dp[501][501] ;
+    int f(int i, int j, vector<int>& nums1, vector<int>& nums2) {
+        if (i == m || j == n) {
+            return -1e9; 
+        }
+
+        if(dp[i][j] != -1)
+        {
+            return dp[i][j] ;
+        }
+
+        int val = nums1[i] * nums2[j];
+
+        int take_i = f(i + 1, j, nums1, nums2);
+        int take_j = f(i, j + 1, nums1, nums2);
+        int take_i_j = (nums1[i] * nums2[j]) + f(i + 1, j + 1, nums1, nums2);
+
+        return dp[i][j] = max({val, take_i, take_j, take_i_j});
+    }
+
+    int maxDotProduct(vector<int>& nums1, vector<int>& nums2) {
+        m = nums1.size();
+        n = nums2.size();
+
+        memset(dp , -1 , sizeof(dp)) ;
+
+        return f(0, 0, nums1, nums2);
+    }
+};
