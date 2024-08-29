@@ -1,0 +1,48 @@
+// https://leetcode.com/problems/frog-jump/
+
+class Solution {
+public:
+    int n;
+    unordered_map<int, int> mp;
+    unordered_map<string, bool> memo; // Memoization map
+
+    bool f(int curr, int prev_jump, vector<int>& stones) {
+        if (curr == n - 1) {
+            return true;
+        }
+
+        // Creating a unique key for memoization
+        string key = to_string(curr) + "," + to_string(prev_jump);
+        if (memo.find(key) != memo.end()) {
+            return memo[key];
+        }
+
+        bool res = false;
+
+        for (int next_jump = prev_jump - 1; next_jump <= prev_jump + 1; ++next_jump) {
+            if (next_jump > 0) {
+                int next_stone = stones[curr] + next_jump;
+
+                if (mp.find(next_stone) != mp.end()) {
+                    res = res || f(mp[next_stone], next_jump, stones);
+                }
+            }
+        }
+
+        return memo[key] = res;
+    }
+
+    bool canCross(vector<int>& stones) {
+        n = stones.size();
+
+        if (stones[1] != 1) {
+            return false;
+        }
+
+        for (int i = 0; i < n; ++i) {
+            mp[stones[i]] = i;
+        }
+
+        return f(0, 0, stones);
+    }
+};
