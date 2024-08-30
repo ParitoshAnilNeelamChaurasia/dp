@@ -1,0 +1,38 @@
+// https://leetcode.com/problems/painting-the-walls/
+
+class Solution {
+public:
+    int n ;
+
+    int dp[501][501] ;
+    int f(int ind , int remain ,vector<int>& cost, vector<int>& time)
+    {
+        if(remain <= 0)
+        {
+            return 0 ;
+        }
+
+        if(dp[ind][remain] != -1)
+        {
+            return dp[ind][remain] ;
+        }
+        if(ind >= n)
+        {
+            return 1e9 ; // invalid case
+        }
+
+        int paint = cost[ind] + f(ind+1 , remain - 1 - time[ind] , cost ,time) ;
+
+        int not_paint = f(ind+1 , remain  , cost , time) ;
+
+        return dp[ind][remain] = min(paint , not_paint) ;
+
+    }
+    int paintWalls(vector<int>& cost, vector<int>& time) {
+        n = cost.size() ;
+
+        memset(dp,-1,sizeof(dp)) ;
+
+        return f(0 , n , cost , time) ;
+    }
+};
