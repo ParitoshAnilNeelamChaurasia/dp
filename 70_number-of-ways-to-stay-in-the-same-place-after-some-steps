@@ -1,0 +1,38 @@
+// https://leetcode.com/problems/number-of-ways-to-stay-in-the-same-place-after-some-steps/description/
+
+class Solution
+{
+public:
+    const int mod = 1e9 + 7;
+    int dp[501][501];
+
+    int f(int ind, int steps, int arrLen)
+    {
+        if (ind < 0 || ind >= arrLen)
+        {
+            return 0;
+        }
+        if (steps == 0)
+        {
+            return ind == 0 ? 1 : 0;
+        }
+        if (dp[ind][steps] != -1)
+        {
+            return dp[ind][steps];
+        }
+
+        int stay = f(ind, steps - 1, arrLen) % mod;
+        int right = f(ind + 1, steps - 1, arrLen) % mod;
+        int left = f(ind - 1, steps - 1, arrLen) % mod;
+
+        dp[ind][steps] = ((stay + right) % mod + left) % mod;
+
+        return dp[ind][steps];
+    }
+
+    int numWays(int steps, int arrLen)
+    {
+        memset(dp, -1, sizeof(dp));
+        return f(0, steps, arrLen);
+    }
+};
