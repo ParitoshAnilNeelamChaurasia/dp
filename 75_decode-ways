@@ -1,0 +1,50 @@
+// https://leetcode.com/problems/decode-ways/description/
+
+class Solution {
+public:
+    int n;
+
+    int dp[101] ;
+    bool is_valid(int num) 
+    {
+        return num >= 10 && num <= 26;
+    }
+
+    int f(int i, string s) {
+        if (i == n) {
+            // Reached the end of the string, so this is a valid decoding
+            return 1;
+        }
+
+        if(dp[i] != -1)
+        {
+            return dp[i] ;
+        }
+        if (s[i] == '0') 
+        {
+            // '0' can't be mapped to a letter
+            return 0;
+        }
+        int count = 0;
+
+        // Take the current single digit
+        count += f(i + 1, s);
+
+        if (i + 1 < n) 
+        {
+            int num = stoi(s.substr(i, 2));  
+            if (is_valid(num)) 
+            {
+                count += f(i + 2, s);
+            }
+        }
+
+        return dp[i] = count;
+    }
+
+    int numDecodings(string s) {
+        n = s.size();
+        memset(dp,-1,sizeof(dp)) ;
+        return f(0, s);
+    }
+};
