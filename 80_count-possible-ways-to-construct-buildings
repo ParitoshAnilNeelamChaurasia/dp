@@ -1,0 +1,59 @@
+
+// https://www.geeksforgeeks.org/problems/count-possible-ways-to-construct-buildings5007/1
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution
+{
+public:
+    int build = 1;
+    int space = 0;
+
+    const int mode = 1e9 + 7;
+
+    int dp[100001][2];
+
+    int f(int plot, int status)
+    {
+        if (plot == 0)
+        {
+            return 1;
+        }
+
+        if (dp[plot][status] != -1)
+        {
+            return dp[plot][status];
+        }
+
+        if (status == build)
+        {
+            return dp[plot][status] = f(plot - 1, space) % mode;
+        }
+
+        return dp[plot][status] = (f(plot - 1, space) % mode + f(plot - 1, build) % mode) % mode;
+    }
+    int TotalWays(int N)
+    {
+        memset(dp, -1, sizeof(dp));
+        int x = f(N - 1, build) + f(N - 1, space);
+
+        return (1LL * x * x) % mode;
+    }
+};
+
+
+int main()
+{
+    int tc;
+    cin >> tc;
+    while (tc--)
+    {
+        int N;
+        cin >> N;
+        Solution ob;
+        int ans = ob.TotalWays(N);
+        cout << ans << "\n";
+    }
+    return 0;
+}
