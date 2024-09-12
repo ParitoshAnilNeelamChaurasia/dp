@@ -1,0 +1,65 @@
+// https://www.geeksforgeeks.org/problems/count-digit-groupings-of-a-number1520/1
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution
+{
+public:
+    int n;
+
+    int dp[101][10001];
+
+    int f(int ind, int prev_sum, string str)
+    {
+        if (ind > n)
+        {
+            return 1;
+        }
+        if (ind == n)
+        {
+            return 1;
+        }
+
+        if (dp[ind][prev_sum] != -1)
+        {
+            return dp[ind][prev_sum];
+        }
+
+        int res = 0;
+        int curr_sum = 0;
+
+        for (int i = ind; i < n; ++i)
+        {
+            curr_sum += (str[i] - '0');
+            if (prev_sum <= curr_sum)
+            {
+                res = res + f(i + 1, curr_sum, str);
+            }
+        }
+        return dp[ind][prev_sum] = res;
+    }
+    int TotalCount(string str)
+    {
+        n = str.size();
+
+        memset(dp, -1, sizeof(dp));
+
+        return f(0, 0, str);
+    }
+};
+
+int main()
+{
+    int tc;
+    cin >> tc;
+    while (tc--)
+    {
+        string str;
+        cin >> str;
+        Solution ob;
+        int ans = ob.TotalCount(str);
+        cout << ans << "\n";
+    }
+    return 0;
+}
