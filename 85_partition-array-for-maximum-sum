@@ -1,0 +1,43 @@
+// https://leetcode.com/problems/partition-array-for-maximum-sum/
+
+class Solution
+{
+public:
+    int n;
+
+    int dp[501];
+    int f(int ind, vector<int> &arr, int k)
+    {
+        if (ind >= n)
+        {
+            return 0;
+        }
+
+        if (dp[ind] != -1)
+        {
+            return dp[ind];
+        }
+
+        int sum = 0;
+
+        int curr_max = -1;
+
+        for (int j = ind; j < n && j - ind + 1 <= k; ++j)
+        {
+            curr_max = max(curr_max, arr[j]);
+
+            // current subarray -> i to j
+            sum = max(sum, (j - ind + 1) * curr_max + f(j + 1, arr, k));
+        }
+
+        return dp[ind] = sum;
+    }
+    int maxSumAfterPartitioning(vector<int> &arr, int k)
+    {
+        n = arr.size();
+
+        memset(dp, -1, sizeof(dp));
+
+        return f(0, arr, k);
+    }
+};
