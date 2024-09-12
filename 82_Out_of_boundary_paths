@@ -1,0 +1,43 @@
+// https://leetcode.com/problems/out-of-boundary-paths/description/
+
+class Solution
+{
+public:
+    const int Mod = 1e9 + 7;
+    vector<vector<int>> directions = {
+        {0, 1}, {-1, 0}, {1, 0}, {0, -1}};
+
+    int dp[51][51][51];
+
+    int f(int startRow, int startColumn, int maxMove, int m, int n)
+    {
+        // If no more moves left, no valid path
+        if (maxMove < 0)
+            return 0;
+
+        // If out of bounds, we found a valid path
+        if (startRow < 0 || startRow >= m || startColumn < 0 || startColumn >= n)
+            return 1;
+
+        if (dp[startRow][startColumn][maxMove] != -1)
+            return dp[startRow][startColumn][maxMove];
+
+        int res = 0;
+        for (vector<int> &dir : directions)
+        {
+            int x = startRow + dir[0];
+            int y = startColumn + dir[1];
+            res = (res + f(x, y, maxMove - 1, m, n)) % Mod;
+        }
+
+        return dp[startRow][startColumn][maxMove] = res;
+    }
+
+    int findPaths(int m, int n, int maxMove, int startRow, int startColumn)
+    {
+        // Initialize dp array with -1 (meaning uncomputed states)
+        memset(dp, -1, sizeof(dp));
+
+        return f(startRow, startColumn, maxMove, m, n);
+    }
+};
