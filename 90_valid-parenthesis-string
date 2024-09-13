@@ -1,0 +1,60 @@
+// https://leetcode.com/problems/valid-parenthesis-string/description/
+
+class Solution
+{
+public:
+    int n;
+
+    int dp[101][101];
+    bool f(int ind, int open, string &s)
+    {
+        if (ind == n)
+        {
+            return open == 0;
+        }
+
+        if (open < 0)
+        {
+            return false;
+        }
+        if (dp[ind][open] != -1)
+        {
+            return dp[ind][open];
+        }
+
+        bool flag = false;
+
+        // trying all 3 possibilities
+        if (s[ind] == '*')
+        {
+            // * -> (
+            if (open > 0)
+            {
+                flag |= f(ind + 1, open - 1, s);
+            }
+
+            // * -> )
+            flag |= f(ind + 1, open + 1, s);
+
+            // * -> ""
+            flag |= f(ind + 1, open, s);
+        }
+
+        else if (s[ind] == ')')
+        {
+            flag |= f(ind + 1, open - 1, s);
+        }
+        else
+        {
+            flag |= f(ind + 1, open + 1, s);
+        }
+
+        return dp[ind][open] = flag;
+    }
+    bool checkValidString(string s)
+    {
+        n = s.size();
+        memset(dp, -1, sizeof(dp));
+        return f(0, 0, s);
+    }
+};
