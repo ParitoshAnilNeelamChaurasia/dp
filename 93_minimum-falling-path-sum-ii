@@ -1,0 +1,45 @@
+// https://leetcode.com/problems/minimum-falling-path-sum-ii/
+
+class Solution {
+public:
+    int m , n ;
+    int dp[201][201] ;
+
+    int f(int x , int y , vector<vector<int>>& grid)
+    {
+        if(x == m-1)
+        {
+            return grid[x][y] ; 
+        }
+
+        if(dp[x][y] != -1)
+        {
+            return dp[x][y] ;
+        }
+
+        int count = INT_MAX ;
+
+        for(int new_j = 0 ; new_j < n ; ++new_j)
+        {
+            if(new_j != y)
+            {
+                count = min(count , f(x+1 , new_j , grid)) ;
+            }
+        }
+        return dp[x][y] = count + grid[x][y] ;
+    }
+    int minFallingPathSum(vector<vector<int>>& grid) {
+        m = grid[0].size() ;
+        n = grid.size() ;
+
+        int count = INT_MAX ;
+
+        memset(dp,-1,sizeof(dp)) ;
+
+        for(int j = 0 ; j < n ; ++j)
+        {
+            count = min(count , f(0 , j , grid)) ;
+        }
+        return count ;
+    }
+};
